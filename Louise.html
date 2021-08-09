@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<!-- Texte affiché dans l'onglet-->
+<title>Louise - Plan pour retrouver vos documents dans la médiathèque</title>
+<meta charset="UTF-8">
+
+<!-- Établit les liens avec tous les autres fichiers -->
+<link rel="icon" type="image/png" href="ressources/favicon.ico"/>
+<script src="jquery-ui-1.12.1/external/jquery/jquery.js"></script>
+<link rel="stylesheet" href="jquery-ui-1.12.1/jquery-ui.css"/>
+<link rel="stylesheet" href="jquery-ui-1.12.1/jquery-ui.structure.css"/>
+<link rel="stylesheet" href="jquery-ui-1.12.1/jquery-ui.theme.css"/>
+<link rel="stylesheet" href="ressources/fontawesome-free-5.12.0-web/css/fontawesome.css"/>
+<link rel="stylesheet" href="ressources/fontawesome-free-5.12.0-web/css/solid.css"/>
+<script src="jquery-ui-1.12.1/jquery-ui.js"></script>
+<script src="jquery-ui-1.12.1/1.11.1_jquery-ui.min.js"></script>
+<script src="jquery-ui-1.12.1/jquery.ui.dialog-clickoutside.js"></script>
+<!-- Sans ce script, dialog ne fonctionnera pas : <script src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>-->
+<!-- ?????je asis aps ce que c'est  <script src="jquery-csv-master/src/jquery.csv.js"></script> -->
+<script src="coreFiles/louiseVersionPublique.js"></script>
+<script src="coreFiles/revues.json.js"></script>
+<link rel="stylesheet" href="coreFiles/louise.css"/>
+</head>
+
+<body>
+<!-- Partie ocnsacrée à l'aide -->
+<div id="help">
+<!-- Bouton affichant l'aide -->
+	<span id="helpButton">AIDE</span>
+<!-- Texte compris dans la zone de l'aide.
+Trois niveaux de titres différents existent, h1, h2, h3.
+La class aideRed permet de signaler en rouge un texte,
+La class tooltipA des balises <a> permettent d'afficher les info-bulles, le title="" est obligatoire pour afficher une image. -->
+	<div id="helpToggle" class="">
+		<h1>Trouvez vos documents !</h1>
+		<p>Lors de votre recherche sur <a href="https://www.archires.archi.fr/">Archirès</a>, vous avez découvert un document qui vous intéresse, vous cherchez donc à vous le procurer.</p>
+		<h2>Est-ce <a id="helpDVD" class="tooltipA" title="">un document audiovisuel </a>?</h2>
+		<p>Cochez <span class="aideRed">Audiovisuel</span>, puis <a id="helpDVDCopier" class="tooltipA" title="">copiez la cote du document</a>, collez-la dans la zone de saisie de texte et lancez votre recherche !</p>
+		<h2>Est-ce un <a id="helpArtRevue" class="tooltipA" title="">article de revue </a>?</h2>
+		<p>Cliquez sur <a id="helpArtRevueArrow" class="tooltipA" title="">"Où trouver cette revue ?"</a>, puis, dans le nouvel onglet, cliquez sur <a id="helpRevueEtatColl" class="tooltipA" title="">"États de collection"</a> et <a id="helpRevueEtatCollCircle" class="tooltipA" title="">vérifiez que nous possédons la revue et le numéro que vous recherchez</a>.</p>
+		<h3><i class="fas fa-angle-right"></i>Nous la possédons ?</h3>
+		<p>Sélectionnez l'année correspondant au numéro que vous recherchez, <a id="helpRevueCopier" class="tooltipA" title="">copiez le nom de la revue</a> et collez-le dans la zone de saisie de texte. Vous pouvez maintenant ajouter un autre document ou lancer votre recherche.</p>
+		<h3><i class="fas fa-angle-right"></i>Nous ne la possédons pas ?</h3>
+		<p>Vous pouvez faire une demande de scan à d'autres écoles la possédant en vous adressant aux documentalistes.</p>
+		<h2>Ni l'un, ni l'autre ?</h2>
+		<p>Cochez <span class="aideRed">Autre type de document</span>, puis <a id="helpDVDCopier2" class="tooltipA" title="">copiez la cote du document</a>, collez-la dans la zone de saisie de texte et lancez votre recherche !</p>
+		<h2>Vous souhaitez un autre document ?</h2>
+		<p>Une fois l'un des boutons radios coché, cliquez sur <span class="aideRed">Ajoutez une cote</span> et faites-le autant de fois que nécessaire !</p>
+	</div>
+</div>
+
+<!-- Partie consacrée au logo. -->
+<div id="divLogo">
+<a href="http://www.bordeaux.archi.fr" target="_blank"><img id="logo" src="ressources/logo_ENSAP_b&r.jpg" title="Site de l'ENSAP Bordeaux"/></a>
+</div>
+
+<!-- Partie consacrée au lien avec HUBert. -->
+<div id="divHUBert">
+<a href="../HUBert 0.4.3/HUBert.html" target="_self"><p style="text-align : center;">
+<span style="font-size : 20px;">Retourner sur</span><br/>
+<span style="font-size : 50px; color : firebrick" title="HUBert - Le hub des services numériques de la médiathèque">HUBert</span></p>
+</a>
+</div>
+
+<!-- Partie dans laquelle l'usager saisit les données.
+Est complétée par le script de Louise. -->
+<div id="divInput"></div>
+
+<!-- Bouton lançant la recherche -->
+<button id="search">Recherchez</button>
+
+<!-- Zone permettant d'affichant quelle sinformations rentrées par l'utilisateur ont généré une erreur (complétée par le script de Louise). -->
+<div id="errorLine" class="hidden coteText"><p class="lambda errorMsg"><b id="errorCotes"></b> -> la recherche n'a pas abouti.</p></div>
+
+<!-- Partie consacrée à la pop-up du plan (complétée par le script de Louise). -->
+<div id="divPlan" title="Plan :">
+<p class="borderText" id="borderDivPlan"></p>
+  <button id="notPlanButton" class="changeDialog"><i class="fas fa-angle-right"></i>Accéder à la suite de vos recherches</button>
+	<div id="divImgPlan"></div>
+</div>
+
+<!-- Partie consacrée à la pop-up des réponses sans plan (complétée par le script de Louise). -->
+<div id="divNotPlan" title="Pour les documents qui ne sont pas en libre accès :">
+<div class="borderText" id="borderDivNotPlan"></div>
+  <button id="planButton" class="changeDialog"><i class="fas fa-angle-right"></i>Retourner sur le plan</button>
+</div>
+
+<!-- Partie consacrée à la pop-up pour les choix (gérée par Louise). -->
+<div id="divChoix" title="Que recherchez-vous ?">
+<p class="lambda" id="revueMagSalle">Plusieurs documents portent la cote : <b id="coteChoixShow"></b><br/>Regardez quelle est sa localisation dans Archirès,<br/>et cliquez sur l'image correspondante.</p>¨
+<!-- Pour ajouter une localisation possible aux choix, copiez et adaptez la ligne ci-dessous et modifiez le script de Lousie en conséquence. -->
+<img id="salle1" class="imgChoix hidden" src="images/Choix/salle1.png">
+<img id="horsformat" class="imgChoix hidden" src="images/Choix/horsformat.png">
+</div>
+
+<!-- Partie consacrée au logo de Louise et à sa version. -->
+<div id="versionLogiciel">
+<!-- Pour modifier le numéro de version, changez le title. -->
+<span style="font-size : 50px; color : firebrick" title="v. github_1.2">Louise</span>
+</div>
+
+<!-- Partie consacrée à l'information sur l'actualité des données. -->
+<div id="dateData">
+<span>Les données de localisation datent de décembre 2019.</span>
+</div>
+
+</body>
+</html>
