@@ -1,4 +1,8 @@
-﻿$('document').ready(function(){
+window.addEventListener('load', function() {
+// La preview via  GitHub & BitBucket HTML Preview échoue,
+// j'essaye la solution proposée ici : https://stackoverflow.com/questions/11258068/is-it-possible-to-wait-until-all-javascript-files-are-loaded-before-executing-ja
+// https://4loc.wordpress.com/2009/04/28/documentready-vs-windowload/
+//$('document').ready(function(){
 
 //Déclaration de toutes les variables de l'interface ou nécessaires pour l'interface
  var divImgPlan = $("#divImgPlan"),
